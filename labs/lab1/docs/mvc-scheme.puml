@@ -1,0 +1,22 @@
+@startuml mvc_scheme
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Times New Roman
+skinparam defaultFontSize 15
+skinparam ArrowFontSize 14
+skinparam nodesep 90
+skinparam ranksep 70
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+}
+skinparam ArrowColor #333333
+
+rectangle "  View  \n  MainWindow, InputDialog  " as V
+rectangle "  Controller  " as C
+rectangle "  Model  \n  Model, LifeStats  " as M
+
+V -down-> C : действие пользователя:\nсигнал enterDataRequested()
+C -right-> M : введённые данные:\nsetInputData(years, hoursPerDay)
+M -up-> V : изменение состояния:\nсигнал dataChanged(stats)
+@enduml

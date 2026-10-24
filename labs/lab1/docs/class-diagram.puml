@@ -1,0 +1,53 @@
+@startuml mvc_life_calculator
+title Каркас MVC с активной моделью — «Калькулятор Жизни» (вариант 14)
+
+skinparam classAttributeIconSize 0
+
+class LifeStats <<struct>> {
+  +years : int
+  +hoursPerDay : double
+  +totalHours : double
+  +totalDays : double
+  +cursorMileageKm : double
+  +clicksCount : qint64
+  +keystrokesCount : qint64
+}
+
+class Model {
+  -m_stats : LifeStats
+  +setInputData(years, hoursPerDay, errorMessage&) : bool
+  +stats() : const LifeStats&
+  -recalculate()
+  <<signal>> dataChanged(stats)
+}
+
+class MainWindow {
+  -m_enterDataButton : QPushButton*
+  -m_*Label : QLabel*
+  <<signal>> enterDataRequested()
+  <<slot>> onModelDataChanged(stats)
+}
+
+class InputDialog {
+  +setInitialValues(years, hoursPerDay)
+  +yearsText() : QString
+  +hoursPerDayText() : QString
+}
+
+class Controller {
+  -m_model : Model*
+  -m_view : MainWindow*
+  <<slot>> onEnterDataRequested()
+}
+
+QObject <|-- Model
+QMainWindow <|-- MainWindow
+QDialog <|-- InputDialog
+QObject <|-- Controller
+
+Model *-- LifeStats
+Controller --> Model : setInputData()
+MainWindow ..> Controller : enterDataRequested
+Controller ..> InputDialog : создаёт, читает ввод
+Model ..> MainWindow : dataChanged → onModelDataChanged\n(активная модель, Observer)
+@enduml

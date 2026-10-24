@@ -1,0 +1,45 @@
+@startuml sequence
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Times New Roman
+skinparam defaultFontSize 14
+skinparam sequenceMessageAlign center
+
+actor "Пользователь" as U
+participant "MainWindow\n(View)" as V
+participant "Controller" as C
+participant "InputDialog\n(View)" as D
+participant "Model" as M
+
+U -> V : нажатие кнопки «Ввести данные»
+V -> C : enterDataRequested()
+activate C
+C -> D : setInitialValues(years, hoursPerDay)
+C -> D : exec()
+activate D
+U -> D : ввод данных, кнопка OK
+D --> C : Accepted, текст полей
+deactivate D
+C -> C : toInt() / toDouble()
+alt текст не является числом
+    C -> U : QMessageBox «Введите корректные\nчисловые значения»
+else текст преобразован
+    C -> M : setInputData(years, hoursPerDay, error)
+    activate M
+    M -> M : проверка диапазонов
+    alt данные вне диапазона
+        M --> C : false + текст ошибки
+        C -> U : QMessageBox с текстом модели
+    else данные приняты
+        M -> M : recalculate()
+        M -> V : dataChanged(stats)
+        activate V
+        V -> V : onModelDataChanged(stats):\nобновление меток
+        V -> U : новые результаты на главной форме
+        deactivate V
+        M --> C : true
+    end
+    deactivate M
+end
+deactivate C
+@enduml
