@@ -1,0 +1,30 @@
+# Каталоги сборки CMake и Visual Studio
+build/
+build-*/
+out/
+cmake-build-*/
+
+# Пользовательские настройки сред разработки
+.vs/
+.vscode/
+*.user
+CMakeUserPresets.json
+
+# Файлы, генерируемые Qt (moc, uic, rcc)
+*_autogen/
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+
+# Результаты компиляции и отладочные файлы
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk
+
+# Временные файлы Word и Windows
+~$*
+Thumbs.db
