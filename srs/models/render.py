@@ -2,7 +2,8 @@
 
 Скрипт разбирает подмножество SysML v2, которое используется в моделях
 каталога srs/models, и рисует диаграммы в графической нотации SysML v2:
-- interconnection — части и соединения (контекст, мокапы GUI, карта окон);
+- interconnection — части и соединения (контекст, карта окон);
+- mockup         — мокапы GUI в виде InterconnectionView (модуль mockup.py);
 - usecase        — варианты использования с субъектом и акторами;
 - requirement    — дерево требований (бизнес-цели);
 - state          — диаграмма состояний;
@@ -19,6 +20,8 @@ import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
+
+import mockup
 
 S = 2  # рисуем с двойным разрешением и уменьшаем для сглаживания
 HERE = Path(__file__).resolve().parent
@@ -685,6 +688,12 @@ def main():
             continue
         out, view, src, short, *opts = line.split()
         opts = dict(o.split("=", 1) for o in opts)
+        if view == "mockup":
+            print(out, view, src, short)
+            OUT.mkdir(exist_ok=True)
+            mockup.render((HERE / src).read_text(encoding="utf-8"), short, OUT / out,
+                          opts.get("view", short).replace("_", " "))
+            continue
         if src not in files:
             files[src] = parse((HERE / src).read_text(encoding="utf-8"))
         root = files[src]
