@@ -1,0 +1,6 @@
+# Диаграммы, которые строит эталонная реализация SysML v2 Pilot (команда %viz)
+# <PNG> <ширина, пикс> <команда>
+03-business-goals.png 2200 %viz --view=tree BusinessGoals::BG
+04-connection-states.png 1400 %viz --view=state ConnectionStates::ConnState
+05-pick-best.png 1500 %viz --view=action PickBest::PickAndConnect
+06-gui-navigation.png 1400 %viz --view=interconnection GuiNavigation::winmap
