@@ -1,11 +1,8 @@
 # <PNG> <вид> <файл модели> <короткое имя элемента> [параметры]
 # В параметре view пробелы в названии вида заменены символом _
+# Диаграммы 03–06 строит эталонная реализация SysML v2 Pilot: см. pilot-views.txt и render_pilot.py
 01-context.png context 01-context.sysml context
 02-usecases.png usecase 02-usecases.sysml -
-03-business-goals.png requirement 03-business-goals.sysml BG
-04-connection-states.png state 04-connection-states.sysml ConnState pos=off:1:1;probing:1:0;applying:2:1;on:3:1;waiting:3:2;restoring:0:2
-05-pick-best.png action 05-pick-best.sysml PickAndConnect
-06-gui-navigation.png navigation 07-gui-navigation.sysml winmap
 07-gui-home.png mockup 06-gui.sysml mainWindow view=UI-01_Главное_окно
 08-gui-servers.png mockup 06-gui.sysml serversWindow view=UI-02_DNS-серверы
 09-gui-options.png mockup 06-gui.sysml optionsWindow view=UI-03_Подключение_и_запуск
