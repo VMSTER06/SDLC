@@ -1,0 +1,11 @@
+# <PNG> <вид> <файл модели> <короткое имя элемента> [параметры]
+01-context.png context 01-context.sysml context
+02-usecases.png usecase 02-usecases.sysml -
+03-business-goals.png requirement 03-business-goals.sysml BG
+04-connection-states.png state 04-connection-states.sysml ConnState pos=off:1:1;probing:1:0;applying:2:1;on:3:1;waiting:3:2;restoring:0:2
+05-pick-best.png action 05-pick-best.sysml PickAndConnect
+06-gui-navigation.png navigation 06-gui.sysml winmap
+07-gui-home.png interconnection 06-gui.sysml home
+08-gui-servers.png interconnection 06-gui.sysml servers
+09-gui-options.png interconnection 06-gui.sysml options
+10-gui-tray.png interconnection 06-gui.sysml trayMenu
