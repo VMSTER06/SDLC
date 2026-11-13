@@ -13,7 +13,7 @@ package PickBest {
         then decide;
             if 'есть доступный профиль' then backup;
             else fail;
-        action <backup> 'Сохранить исходные DNS и DoH адаптера';
+        action <backup> 'Сохранить исходные DNS, DoH и IPv6 адаптера';
         then action <apply> 'Применить адреса и шаблон DoH лучшего профиля, сбросить кэш DNS';
         then action <remember> 'Запомнить результаты и лучший профиль для этой сети';
         then done;
