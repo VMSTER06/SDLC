@@ -48,7 +48,10 @@
 доступны ChatGPT и Claude, с восстановлением исходных настроек сети.
 
 - спецификация требований: [srs/srs-murikdns.md](srs/srs-murikdns.md);
-- модели SysML v2: [srs/models](srs/models), изображения: [srs/images](srs/images).
+- модели SysML v2: [srs/models](srs/models), изображения: [srs/images](srs/images);
+- описание проектирования: [sdd/sdd-murikdns.md](sdd/sdd-murikdns.md), схемы: [sdd/diagrams](sdd/diagrams);
+- архитектурные решения: [adr](adr) (ADR-0001…0005);
+- переписка с Заказчиком и планы реализации: [sdd/correspondence-and-plans.md](sdd/correspondence-and-plans.md).
 
 ## Ветки
 
@@ -58,6 +61,7 @@
 | `lab1` | Материалы лабораторной работы №1 |
 | `ProjectTemplate` | Шаблон проекта и описание (слита в `main`) |
 | `lab3` | Спецификация требований курсового проекта Murik DNS (лабораторная работа №3) |
+| `lab4` | Системные требования, SDD, ADR и планы реализации Murik DNS (лабораторная работа №4) |
 
 ## Сборка
 
