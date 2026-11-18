@@ -2,13 +2,13 @@
 
 Для **Murik DNS 3.1** — настольного приложения для подбора и подключения DNS-серверов, обеспечивающих доступ к ChatGPT, Claude
 
-Версия 0.1
+Версия 0.2
 
 Подготовил Мурачев В. К., гр. 434701
 
 БГУИР, военный факультет, кафедра ЭВМ
 
-16.11.2026
+17.11.2026
 
 ## Оглавление
 
@@ -47,6 +47,7 @@
 | Name | Date | Reason For Changes | Version |
 |------|------|--------------------|---------|
 | Мурачев В. К. | 16.11.2026 | Первая редакция: точки зрения, представления VIEW-01…09, системные требования, ADR-0001…0003, план 0.1 | 0.1 |
+| Мурачев В. К. | 17.11.2026 | Раунд 1: приоритеты Заказчика (F-06, F-07, F-09), ADR-0004, план 0.2 на 200 ч | 0.2 |
 
 ---
 
@@ -246,13 +247,13 @@
 | SYS-FUNC-002 | Probe / Benchmarks | Функция Benchmarks::rank отсеивает недоступные профили и упорядочивает доступные по оценке S = t_DNS + t_ChatGPT + t_Claude + 0,25 · t_ping (при равенстве — по названию), отмечая «Лучший #1–3» | REQ-FUNC-002-2 | 10 – Highest (Core Value) |
 | SYS-FUNC-003 | Engine | Engine::connect под мьютексом сохраняет оригинал адаптера (Backup) в connection-state.json до изменения, записывает IPv4-адреса, шаблон DoH и состояние IPv6, сбрасывает кэш DNS и проверяет результат; при ошибке вызывает restoreAdapter | REQ-FUNC-003, REQ-FUNC-004-2, REQ-FUNC-014, REQ-REL-001 | 15 – Critical (Safety) |
 | SYS-FUNC-004 | Engine / Storage | Engine::restore отменяет ожидающую операцию и восстанавливает DNS, DoH и IPv6 из сохранённого оригинала; оригинал отсутствующего адаптера хранится в pending/<guid>.json до его появления | REQ-FUNC-005-2, REQ-REL-002 | 15 – Critical (Safety) |
-| SYS-FUNC-005 | Policy | Конечный автомат Policy (None, WaitingNetwork, WaitingStable, Connect, Health) повторяет подключение через 5, 10, 20, 40 и далее 60 с, проверяет подключение каждые 60 с и после смены адаптера ждёт стабильной сети не менее 3 с | REQ-FUNC-009, REQ-FUNC-010 | 25 – High-Medium (Background) |
-| SYS-FUNC-006 | Platform | Задание автозапуска регистрируется через COM-интерфейс Планировщика заданий Windows с наивысшими правами; при запуске из задания окно не открывается, сохранённый профиль подключается без подбора | REQ-FUNC-011 | 25 – High-Medium (Background) |
+| SYS-FUNC-005 | Policy | Конечный автомат Policy (None, WaitingNetwork, WaitingStable, Connect, Health) повторяет подключение через 5, 10, 20, 40 и далее 60 с, проверяет подключение каждые 60 с и после смены адаптера ждёт стабильной сети не менее 3 с | REQ-FUNC-009, REQ-FUNC-010 | 20 – High (Background) |
+| SYS-FUNC-006 | Platform | Задание автозапуска регистрируется через COM-интерфейс Планировщика заданий Windows с наивысшими правами; при запуске из задания окно не открывается, сохранённый профиль подключается без подбора | REQ-FUNC-011 | 20 – High (Background) |
 | SYS-FUNC-007 | Benchmarks / Storage | Результаты подбора сохраняются в benchmarks.json по ключу сети Adapter::networkKey() и показываются при возврате в эту сеть | REQ-FUNC-008 | 25 – High-Medium (Workspace) |
 | SYS-FUNC-008 | Core | Каталог профилей загружает 15 профилей из ресурса profiles.json; профиль с некорректным IPv4-адресом или URL DoH отвергается при загрузке | REQ-INT-005, REQ-REUSE-001 | 10 – Highest (Foundation) |
 | SYS-UI-001 | UI | Окно Window (1140×820, минимум 1040×700) реализует UI-01 и UI-02: состояние, профиль, адрес и режим; таблица QTableView с делегатом отметки «Исключить», панель «Вручную» | REQ-INT-001…003, REQ-FUNC-006, REQ-FUNC-007 | 20 – High (Workspace) |
-| SYS-UI-002 | UI | Значок QSystemTrayIcon с меню «Открыть», «Отключить DNS», «Выход»; закрытие окна скрывает его в трей; уведомление при автоматических действиях | REQ-FUNC-012, REQ-FUNC-016 | 25 – High-Medium (Background) |
-| SYS-UI-003 | UI / Platform | Вкладка UI-03 с переключателем темы (QSS-палитра) и блокировка единственного экземпляра через QLocalServer | REQ-FUNC-013, REQ-FUNC-015 | 40 – Low (Comfort) |
+| SYS-UI-002 | UI | Значок QSystemTrayIcon с меню «Открыть», «Отключить DNS», «Выход»; закрытие окна скрывает его в трей; уведомление при автоматических действиях | REQ-FUNC-012, REQ-FUNC-016 | 20 – High (Background) |
+| SYS-UI-003 | UI / Platform | Вкладка UI-03 с переключателем темы (QSS-палитра) и блокировка единственного экземпляра через QLocalServer | REQ-FUNC-013, REQ-FUNC-015 | 45 – Low-Minimal (Comfort) |
 
 ### 3.11 Системные нефункциональные требования
 
@@ -263,12 +264,12 @@
 | SYS-PERF-003 | Performance | Сетевые операции выполняются в пуле QtConcurrent, поток интерфейса блокируется не более чем на 100 мс | REQ-PERF-003 | 20 – High (Workspace) |
 | SYS-SEC-001 | Security | Манифест requireAdministrator; при отказе в UAC процесс завершается без изменения сети | REQ-SEC-001 | 10 – Highest (Foundation) |
 | SYS-SEC-002 | Security | Запросы проверки не содержат cookies, учётных данных и заголовков пользователя; изменяются только DNS, DoH, IPv6 и задание автозапуска | REQ-SEC-002, REQ-SEC-004 | 15 – Critical (Safety) |
-| SYS-SEC-003 | Security | Архив выпуска собирается из каталога сборки и не содержит файлов %LOCALAPPDATA% | REQ-SEC-003 | 45 – Low-Minimal (Delivery) |
+| SYS-SEC-003 | Security | Архив выпуска собирается из каталога сборки и не содержит файлов %LOCALAPPDATA% | REQ-SEC-003 | 35 – Medium-Low (Delivery) |
 | SYS-REL-001 | Reliability | Все JSON-файлы записываются атомарно (QSaveFile: временный файл и переименование); состояние сохраняется до изменения адаптера | REQ-REL-001, REQ-REL-002 | 10 – Highest (Foundation) |
 | SYS-REL-002 | Reliability | Разбор DNS-ответа с проверкой границ и ограничением цепочки указателей сжатия; 20 000 случайных пакетов без сбоя | REQ-REL-003 | 30 – Medium (Quality) |
-| SYS-OBS-001 | Maintainability | Журнал murik.log в каталоге данных: дата, время, операция, текст ошибки; ротация при 1 МБ, хранится три файла | REQ-OBS-001 | 45 – Low-Minimal (Delivery) |
+| SYS-OBS-001 | Maintainability | Журнал murik.log в каталоге данных: дата, время, операция, текст ошибки; ротация при 1 МБ, хранится три файла | REQ-OBS-001 | 35 – Medium-Low (Delivery) |
 | SYS-MAINT-001 | Maintainability | Интерфейсы Network и Probe с тестовыми FakeNetwork и FakeProbe; режимы --self-test, --smoke-test, --tray-lifecycle-test | REQ-MAINT-001, REQ-BUILD-002 | 30 – Medium (Quality) |
-| SYS-DIST-001 | Portability | Переносимая папка (ZIP) для Windows 11 x64 и Windows 10 x64 без DoH: windeployqt, Licenses/, THIRD-PARTY.txt; сборка Build-Cpp.ps1 без предупреждений; чтение данных версии на C# | REQ-INST-001, REQ-INST-002, REQ-COMP-001, REQ-BUILD-001, REQ-PORT-001-2 | 45 – Low-Minimal (Delivery) |
+| SYS-DIST-001 | Portability | Переносимая папка (ZIP) для Windows 11 x64 и Windows 10 x64 без DoH: windeployqt, Licenses/, THIRD-PARTY.txt; сборка Build-Cpp.ps1 без предупреждений; чтение данных версии на C# | REQ-INST-001, REQ-INST-002, REQ-COMP-001, REQ-BUILD-001, REQ-PORT-001-2 | 35 – Medium-Low (Delivery) |
 
 ---
 
@@ -276,27 +277,24 @@
 
 - **ID:** ADR-0001 — [Ядро без Qt Widgets и интерфейсы Network и Probe](../adr/0001-layered-core-with-interfaces.md); принято 16.11.2026.
 - **ID:** ADR-0002 — [Хранение в JSON с атомарной записью](../adr/0002-json-storage-atomic-write.md); принято 16.11.2026.
-- **ID:** ADR-0003 — [Единый HTTPS-клиент с закреплённым IP для DoH и проверки сервисов](../adr/0003-pinned-https-probe.md); предложено 16.11.2026, на согласовании с Заказчиком.
+- **ID:** ADR-0003 — [Единый HTTPS-клиент с закреплённым IP для DoH и проверки сервисов](../adr/0003-pinned-https-probe.md); принято 17.11.2026.
+- **ID:** ADR-0004 — [Интерфейс на стандартных Qt Widgets, QSS и model/view](../adr/0004-qt-widgets-qss-model-view.md); принято 17.11.2026.
 
 ---
 
 ## 5. Приложения {#5-appendixes}
 
-### 5.1 План реализации (версия 0.1)
+### 5.1 План реализации (версия 0.2)
 
-| Блок | Priority | Трудоёмкость, ч | Стоимость, BYN | Итерации |
-|------|----------|-----------------|----------------|----------|
-| F-01 Core Model, JSON Storage & Profiles | 10 – Highest (Foundation) | 24 | 960 | 1 |
-| F-02 Windows Network Layer (DNS, DoH, IPv6) | 10 – Highest (Foundation) | 36 | 1 440 | 1–2 |
-| F-03 Probe & Ranking Engine | 10 – Highest (Core Value) | 44 | 1 760 | 2–3 |
-| F-04 Connect / Restore Engine with Safe Backup | 15 – Critical (Safety) | 28 | 1 120 | 3–4 |
-| F-05 Main Window & DNS Servers Tab | 20 – High (Workspace) | 40 | 1 600 | 4–5 |
-| F-06 Auto Policy, Autostart, Tray & Notifications | 25 – High-Medium (Background) | 36 | 1 440 | 5–6 |
-| F-07 Settings Tab, Theme & Single Instance | 40 – Low (Comfort) | 12 | 480 | 6 |
-| F-08 Self-Test, Smoke & Fuzz Testing | 30 – Medium (Quality) | 24 | 960 | 6–7 |
-| F-09 Logging, Build & Portable Package | 45 – Low-Minimal (Delivery) | 16 | 640 | 7 |
-| Итого (версия 0.1) | 10..45 | 260 | 10 400 | 6,5 итерации, финиш 06.01.2027 |
+| Итерация | Задачи | Priority | Зависимости | Часы | Стоимость, BYN |
+|----------|--------|----------|-------------|------|----------------|
+| 1 (23.11–27.11) | F-01 Модель и хранилище JSON (20 ч) + F-03a DNS-пакеты и ранжирование (20 ч) | 10 | – | 40 | 1 600 |
+| 2 (30.11–04.12) | F-02 Сетевой слой Windows (28 ч) + F-03b Проверки HTTPS и DoH (12 ч) | 10 | После F-01 | 40 | 1 600 |
+| 3 (07.12–11.12) | F-04 Подключение и откат (28 ч) + F-05a Главное окно UI-01 (12 ч) | 15, 20 | После F-02, F-03 | 40 | 1 600 |
+| 4 (14.12–18.12) | F-05b Вкладка «DNS-серверы» UI-02 (16 ч) + F-06a Автомат Policy и трей (16 ч) + F-07 Настройки, один экземпляр (8 ч) | 20, 45 | После F-04, F-05a | 40 | 1 600 |
+| 5 (21.12–25.12) | F-06b Автозапуск, уведомления (12 ч) + F-08 Самотестирование, fuzz (16 ч) + F-09 Журнал, сборка, ZIP (12 ч) | 20, 30, 35 | После F-06a | 40 | 1 600 |
+| Итого (версия 0.2) | 9 блоков | 10..45 | – | 200 | 8 000 |
 
-![План версии 0.1](images/plan-v01.png)
+![План версии 0.2](images/plan-v02.png)
 
 Переписка с Заказчиком: [correspondence-and-plans.md](correspondence-and-plans.md).
